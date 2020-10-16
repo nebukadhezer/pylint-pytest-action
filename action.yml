@@ -9,7 +9,8 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: |
+    - shell: bash
+      run: |
         if [ ${{ inputs.module_name }} ="NOT_SET" ]; then
             MODULE_NAME=$(basename $GITHUB_REPOSITORY)
             if [ -d $MODULE_NAME ] 
@@ -26,7 +27,6 @@ runs:
         pip install pytest pytest-cov pylint
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -f requirements_test.txt ]; then pip install -r requirements_test.txt; fi
-      shell: bash
     - run: pylint --rcfile=.pylintrc ${MODULE_NAME}
       shell: bash
     - run: pytest --cov=${MODULE_NAME} -v
