@@ -1,0 +1,33 @@
+name: 'pylint pytest'
+description: 'run pylint and pytest with coverage if possible'
+inputs:
+  module_name:
+    description: 'name of the python module in the repository'
+    required: true
+    default: 'NOT_SET'
+
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        if [ ${{ inputs.module_name }} ="NOT_SET" ]; then
+            MODULE_NAME=$(basename $GITHUB_REPOSITORY)
+            if [ -d $MODULE_NAME ] 
+            then
+                echo "Directory $MODULE_NAME exists. Using that" 
+            else
+                echo "$MODULE_NAME does not exists, cannot continue"
+                exit 0
+            fi
+        else
+            MODULE_NAME = ${{ inputs.module_name }}
+        echo "::set-env name=MODULE_NAME::$MODULE_NAME"
+        python -m pip install --upgrade pip
+        pip install pytest pytest-cov pylint
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f requirements_test.txt ]; then pip install -r requirements_test.txt; fi
+      shell: bash
+    - run: pylint --rcfile=.pylintrc ${MODULE_NAME}
+      shell: bash
+    - run: pytest --cov=${MODULE_NAME} -v
+      shell: bash
