@@ -11,6 +11,14 @@ runs:
   steps:
     - shell: bash
       run: echo "${{ inputs.module_name }}"
+    - run: python -m pip install --upgrade pip
+      shell: bash
+    - run: pip install pytest pytest-cov pylint
+      shell: bash
+    - run: if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      shell: bash
+    - run: if [ -f requirements_test.txt ]; then pip install -r requirements_test.txt; fi
+      shell: bash
     - run: pylint --rcfile=.pylintrc ${MODULE_NAME}
       shell: bash
     - run: pytest --cov=${MODULE_NAME} -v
