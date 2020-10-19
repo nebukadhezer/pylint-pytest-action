@@ -19,7 +19,7 @@ runs:
       shell: bash
     - run: if [ -f requirements_test.txt ]; then pip install -r requirements_test.txt; fi
       shell: bash
-    - run: pylint --rcfile=.pylintrc ${{ inputs.module_name }}
+    - run: pylint --rcfile=.pylintrc ${{ inputs.module_name }} || exit 0
       shell: bash
     - run: pytest --cov=${{ inputs.module_name }} -v
       shell: bash
