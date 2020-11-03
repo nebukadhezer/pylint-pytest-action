@@ -21,7 +21,5 @@ runs:
       shell: bash
     - run: pylint --rcfile=.pylintrc ${{ inputs.module_name }} || exit 0
       shell: bash
-    - run: if [ -d ${{ env.GITHUB_WORKSPACE }}/tests  ]; then echo "tests found"; else echo "tests not found" && exit 0; fi
-      shell: bash
-    - run: pytest --cov=${{ inputs.module_name }} -v
+    - run: if [ -d ${{ env.GITHUB_WORKSPACE }}/tests  ]; then pytest --cov=${{ inputs.module_name }} -v; else echo "tests not found" && exit 0; fi
       shell: bash
