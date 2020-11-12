@@ -9,5 +9,19 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: ${{ github.action_path }}/run_action.sh
+    - shell: bash
+      run: echo "${{ inputs.module_name }}"
+    - shell: bash
+      run: ls -al
+    - run: python -m pip install --upgrade pip
+      shell: bash
+    - run: pip install pytest pytest-cov pylint
+      shell: bash
+    - run: if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      shell: bash
+    - run: if [ -f requirements_test.txt ]; then pip install -r requirements_test.txt; fi
+      shell: bash
+    - run: pylint --rcfile=.pylintrc ${{ inputs.module_name }} || exit 0
+      shell: bash
+    - run: if [ -d tests -o -d test  ]; then export PYTHONPATH=$(pwd) && pytest --cov=${{ inputs.module_name }} -v; else echo "tests not found" && exit 0; fi
       shell: bash
