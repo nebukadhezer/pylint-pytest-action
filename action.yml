@@ -15,7 +15,7 @@ runs:
       run: ls -al
     - run: python -m pip install --upgrade pip
       shell: bash
-    - run: export PYTHON_VERSION=`python -c 'import sys; print(sys.version_info[0])'`
+    - run: echo "{PYTHON_VERSION}={`python -c 'import sys; print(sys.version_info[0])'`}" >> $GITHUB_ENV
       shell: bash
     - run: echo "$PYTHON_VERSION"
       shell: bash
